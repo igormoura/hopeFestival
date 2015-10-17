@@ -15,9 +15,17 @@ $(document).ready(function(){
 	 
 	$('.customer-phone').mask(maskBehavior, options);
 
-	$( ".btn-modal" ).click(function() {
+	$( ".btn-modal-register" ).click(function() {
     $('#counselorId').val($(this).attr("value"));
   });
+
+  $( ".btn-modal-checking" ).click(function() {
+    console.log($(this).attr("value"));
+    $('#counselorCheckingId').val($(this).attr("value"));
+    $('#counselorName').text("Conselheiro(a): " + $(this).attr("counselor"));
+  });
+
+
 });
 
 

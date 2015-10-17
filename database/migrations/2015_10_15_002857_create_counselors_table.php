@@ -26,6 +26,7 @@ class CreateCounselorsTable extends Migration
         $table->string('state');
         $table->string('church');
         $table->string('pastor');
+        $table->boolean('accreditation')->default(0);
         $table->timestamps();
       });
     }

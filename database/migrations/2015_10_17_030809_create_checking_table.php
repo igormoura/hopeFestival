@@ -14,12 +14,12 @@ class CreateCheckingTable extends Migration
     {
         Schema::create('checking', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('code_bar_counselor_id')->unsigned();
+            $table->integer('accreditation_id')->unsigned();
             $table->boolean('confirmed');
             $table->dateTime('day_event');
             $table->timestamps();
 
-            $table->foreign('code_bar_counselor_id')->references('id')->on('code_bar_counselors');
+            $table->foreign('accreditation_id')->references('id')->on('accreditation');
         });
     }
 

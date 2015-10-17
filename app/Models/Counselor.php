@@ -24,7 +24,7 @@ class Counselor extends Model
       'city',
       'state',
       'church',
-      'pastor'
+      'pastor',
+      'accreditation'
     ];
-
 }

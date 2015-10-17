@@ -11,7 +11,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Counselor;
 use App\Models\CodeBar;
-use App\Models\CodeBarCounselor;
+use App\Models\Accreditation;
+use App\Models\Checking;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -27,25 +28,10 @@ class CounselorController extends Controller
    */
   public function index(Request $request)
   {
-
-    $query = Counselor::query();
-
-    if (Input::has('name'))
-    {
-      $name = Input::get('name');
-      $query->where('name', 'LIKE', "%$name%")->orderBy('name')->paginate(10);
-    }
-
-    if (Input::has('name'))
-    {
-      $name = Input::get('name');
-      $query->where('name', 'LIKE', "%$name%")->orderBy('name')->paginate(10);
-    }
-
-    $counselors = $query->paginate(10);
+    $counselors = Counselor::query();
+    $counselors = $counselors->paginate(10);
     return view('counselors.index',compact('counselors'));
   }
-
 
   public function search(Request $request)
   {
@@ -68,7 +54,7 @@ class CounselorController extends Controller
   {
     $validator = Validator::make(Request::all(), [
       'code_bar' => 'required'
-    ]); 
+      ]); 
     if ($validator->fails())
     {
       return redirect()->back()->withErrors($validator->errors());
@@ -78,17 +64,115 @@ class CounselorController extends Controller
       $codeBar = DB::table('code_bars')->where('serial', Input::get('code_bar'))->first();
       if(isset($codeBar))
       {
-        $codeBarCounselor=Request::all();
-        DB::table('code_bar_counselors')->insert(
+        if($codeBar->active==0)
+        {
+          $codeBar = CodeBar::find($codeBar->id);
+          $codeBar->active = 1;
+          $codeBar->save();
+          
+          $codeBarCounselor=Request::all();
+
+          $counselor = Counselor::find($codeBarCounselor['counselor']);
+          
+          $counselor->accreditation = 1;
+          $counselor->save();
+
+          DB::table('accreditation')->insert(
             ['code_bar_id' => $codeBar->id, 
-             'counselor_id'=> $codeBarCounselor['counselor']]
-        );
-        return redirect('counselors');
+            'counselor_id'=> $codeBarCounselor['counselor'],
+            'created_at' =>  new \DateTime('NOW'),
+            'updated_at' =>  new \DateTime('NOW')]
+            );
+          return redirect('counselors');
+        }else{
+          return redirect()->back()->withErrors("Codigo de barra já registrado.");
+        }
+        
       }
 
       return redirect()->back()->withErrors("Code Bar not found.");
     }
   }
+
+  public function checkingCodeBar(Request $request)
+  {
+    $checkingCodeBar=Request::all();
+    $codeBar = DB::table('code_bars')->where('serial', $checkingCodeBar['code_bar'])->first();
+
+    if(!empty($codeBar)){
+      $accreditation = DB::table('accreditation')->where('code_bar_id', $codeBar->id)->first();
+      if(!empty($accreditation))
+      {
+        $checking_db = DB::table('checking')->whereAccreditationIdAndDayEvent($accreditation->id, \Date('Y-m-d'))->get();
+        if(!empty($checking_db))
+        {
+          return redirect()->back()->withErrors("Checking já realizado");
+        }
+        elseif(empty($checking_db))
+        {
+          DB::table('checking')->insert(
+            ['accreditation_id' => $accreditation->id, 
+            'confirmed'=> 1,
+            'day_event'=> \Date('Y-m-d'),
+            'created_at' =>  new \DateTime('NOW'),
+            'updated_at' =>  new \DateTime('NOW')]
+            );
+          return redirect('counselors');
+        }
+      }
+    }
+  }
+
+  public function checking(Request $request)
+  {
+    /*$validator = Validator::make(Request::all(), [
+      'date_event' => 'required'
+    ]); 
+    if ($validator->fails())
+    {
+      return redirect()->back()->withErrors($validator->errors());
+    }
+    else 
+    {*/
+      //$codeBar = DB::table('code_bars')->where('serial', Input::get('code_bar'))->first();
+      //if(isset($codeBar))
+      //{
+      //  if($codeBar->active==0)
+      //  {
+          //$codeBar = CodeBar::find($codeBar->id);
+          //$codeBar->active = 1;
+          //$codeBar->save();
+
+          //$codeBarCounselor=Request::all();
+
+      $checking=Request::all();
+      $accreditation = DB::table('accreditation')->where('counselor_id', $checking['counselor'])->first();
+      $counselor = Counselor::find($checking['counselor']);
+      $checking_db = DB::table('checking')->whereAccreditationIdAndDayEvent($accreditation->id, $checking['day_event'])->get();
+
+      if(!empty($checking_db))
+      {
+        return redirect()->back()->withErrors($counselor->name." Já realizou o checking no dia ".date("d/m/Y", strtotime($checking['day_event'])));
+      }
+      elseif(empty($checking_db))
+      {
+        DB::table('checking')->insert(
+          ['accreditation_id' => $accreditation->id, 
+          'confirmed'=> 1,
+          'day_event'=> $checking['day_event'],
+          'created_at' =>  new \DateTime('NOW'),
+          'updated_at' =>  new \DateTime('NOW')]
+          );
+        return redirect('counselors');
+      }
+        //}else{
+        //  return redirect()->back()->withErrors("Codigo de barra já registrado.");
+        //}
+
+      //}
+
+      return redirect()->back()->withErrors("Code Bar not found.");
+    }
 
   /**
    * Show the form for creating a new resource.
@@ -102,8 +186,8 @@ class CounselorController extends Controller
 
     foreach ($applications as $id => $application) {
       $versions = Version::where('application_id', $id)
-                  ->orderBy('id', 'desc')
-                  ->get();
+      ->orderBy('id', 'desc')
+      ->get();
       foreach ($versions as $id => $version) {
         $applications_version=array($version->id=>$application.' - '.$version->name) + $applications_version; 
       }
@@ -125,7 +209,7 @@ class CounselorController extends Controller
       'email' => 'required|email|max:255|unique:counselors',
       'phone' => 'required',
       'version_id' => 'required',
-    ]); 
+      ]); 
 
     if ($validator->fails())
     {
@@ -167,8 +251,8 @@ class CounselorController extends Controller
     $applications = Application::lists('name', 'id');
     foreach ($applications as $id => $application) {
       $versions = Version::where('application_id', $id)
-                  ->orderBy('id', 'desc')
-                  ->get();
+      ->orderBy('id', 'desc')
+      ->get();
       foreach ($versions as $id => $version) {
         $applications_version=array($version->id=>$application.' - '.$version->name) + $applications_version; 
       }
@@ -191,7 +275,7 @@ class CounselorController extends Controller
       'email' => 'required|email|max:255',
       'phone' => 'required',
       'version_id' => 'required',
-    ]); 
+      ]); 
 
     if ($validator->fails())
     {

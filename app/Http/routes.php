@@ -36,8 +36,12 @@ Route::resource('versions','VersionController');
 Route::resource('counselors', 'CounselorController');
 Route::get('home', 'HomeController@index');
 
-Route::post('register', 'CounselorController@register');
-Route::post('search', 'CounselorController@search');
+Route::post('/register', 'CounselorController@register');
+Route::post('/checking', 'CounselorController@checking');
+Route::post('/checkingCodeBar', 'CounselorController@checkingCodeBar');
+Route::post('/counselors', 'CounselorController@search');
+
+
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
