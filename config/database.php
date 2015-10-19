@@ -79,10 +79,10 @@ return [
     /** Heroku Database **/
     'pgsql' => [
       'driver'   => 'pgsql',
-      'host'     => env('DB_HOST', 'ec2-54-83-25-238.compute-1.amazonaws.com'),
-      'database' => env('DB_DATABASE', 'dc2oenelp4q838'),
-      'username' => env('DB_USERNAME', 'hhkviuozdgotpq'),
-      'password' => env('DB_PASSWORD', 'ak2yGkUpVeyRDbkZQ3Zbe7WEHT'),
+      'host'     => env('DB_HOST', 'ec2-54-83-18-87.compute-1.amazonaws.com'),
+      'database' => env('DB_DATABASE', 'd8fqo9k8ctvocd'),
+      'username' => env('DB_USERNAME', 'phsiymenelpqzy'),
+      'password' => env('DB_PASSWORD', 'QKUMHdznsLPatvTsL_iPkpbeGE'),
       'charset'  => 'utf8',
       'prefix'   => '',
       'schema'   => 'public',
