@@ -1,7 +1,12 @@
 @extends('app')
 @section('content')
 <div class="container">
- <h1>Counselors</h1>
+ @if (Session::has('message1'))
+    <div class="alert alert-info">{{ Session::get('message1') }}</div>
+@endif
+
+
+ <h1>Counselors</h1>  
 
  {!! Form::open(array('action' => array('CounselorController@search'))) !!} 
  <div class="form-group">

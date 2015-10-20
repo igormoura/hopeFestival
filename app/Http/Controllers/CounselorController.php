@@ -18,6 +18,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Input;
 use DB;
+use Session;
 
 class CounselorController extends Controller
 {
@@ -120,7 +121,10 @@ class CounselorController extends Controller
           return redirect('counselors');
         }
       }
+      return redirect()->back()->withErrors("Codigo de barra não credenciado a um conselheiro.");      
     }
+    Session::flash('message1', 'My message');
+    return redirect()->back();
   }
 
   public function checking(Request $request)

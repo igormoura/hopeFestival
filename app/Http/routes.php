@@ -34,12 +34,16 @@ Route::resource('archives','ArchiveController');
 Route::resource('customers','CustomerController');
 Route::resource('versions','VersionController');
 Route::resource('counselors', 'CounselorController');
+Route::resource('reports', 'ReportCounselorController');
 Route::get('home', 'HomeController@index');
 
 Route::post('/register', 'CounselorController@register');
 Route::post('/checking', 'CounselorController@checking');
 Route::post('/checkingCodeBar', 'CounselorController@checkingCodeBar');
 Route::post('/counselors', 'CounselorController@search');
+
+Route::post('/reportByDate', 'ReportCounselorController@reportByDate');
+
 
 
 

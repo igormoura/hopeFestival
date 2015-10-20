@@ -32,12 +32,12 @@
 				</button>
 				<a class="navbar-brand" href="#">Festival of Hope 2015</a>
 			</div>
-
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('home') }}">Home</a></li>
 					@if (Auth::check())
 						<li><a href="{{ url('counselors') }}">Counselors</a></li>
+						<li><a href="{{ url('reports') }}">Reports</a></li>
 						<!--<li><a href="{{ url('customers') }}">Customers</a></li>
 						<li><a href="{{ url('applications') }}">Applications</a></li>
 						<li><a href="{{ url('versions') }}">Versions</a></li>
