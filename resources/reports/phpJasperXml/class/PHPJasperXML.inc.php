@@ -138,10 +138,12 @@ class PHPJasperXML {
     }
     
     public function load_xml_file($file){
+
+        //print_r($file);exit;
             
-      $path = getcwd()."/module/Application/view/application/report/";
+     // $path = '';//getcwd()."/module/Application/view/application/report/";
       
-      $xml = file_get_contents($path.$file);
+      $xml = file_get_contents($file);
       
       
       $xmlObj = simplexml_load_string($xml);

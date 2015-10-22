@@ -1,10 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="counselors" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bd5d1d31-8792-49c3-b613-30e7fa9adce2">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio-atendimento" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="24dd3384-4633-400e-8983-e3bd2ca94959">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#757C82">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F2FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#757C82">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#E6F2FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#56687A">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#CFDAE6">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Row Zebra" mode="Opaque" forecolor="#CCCCFF" backcolor="#CCCCFF">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean(($V{COLUMN_COUNT}.intValue() % 2) == 0)]]></conditionExpression>
+			<style mode="Opaque" forecolor="#CCCCCC" backcolor="#CCCCCC" fill="Solid"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="b4a84fa8-b89f-4b31-b39e-937e13f2b855"/>
+	<subDataset name="Table Dataset 2" uuid="3a5885db-cae0-4a61-993a-68b317158960"/>
+	<subDataset name="Table Dataset 3" uuid="5bd94403-db10-4c13-bd2b-78d1205cf67f"/>
+	<subDataset name="Table Dataset 4" uuid="b86883ed-64f1-4d73-989b-2a7a4ba210bd"/>
+	<parameter name="begin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="quantity" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="total" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_generation" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="period" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT * FROM db_hope_festival.counselors]]>
+		<![CDATA[select ck.id, cou.name, cou.email, cou.church, cou.pastor, ck.day_event from checking AS ck
+inner join accreditation AS acc ON ck.accreditation_id = acc.id
+inner join counselors AS cou ON acc.counselor_id = cou.id
+where ck.day_event BETWEEN '2015-10-01 00:00:00' AND  '2015-10-30 23:59:59'
+order by ck.day_event, ck.id]]>
 	</queryString>
 	<field name="id" class="java.lang.Long">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -15,117 +107,189 @@
 	<field name="email" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="area_code" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="phone" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="phone_cel" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="address" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="number" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="complement" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="city" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="state" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="church" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="pastor" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="accreditation" class="java.lang.Integer">
+	<field name="day_event" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="created_at" class="java.sql.Timestamp">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="updated_at" class="java.sql.Timestamp">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<variable name="count_value" class="java.math.BigDecimal" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{unit_value}]]></variableExpression>
+	</variable>
+	<variable name="sum_value" class="java.lang.Integer" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{unit_value}]]></variableExpression>
+	</variable>
+	<variable name="variable1" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="79" splitType="Stretch"/>
-	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch"/>
+		<band height="85" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="55" width="54" height="16" forecolor="#000000" uuid="c292fa6e-bbdd-4821-8125-6a3f468e501c"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Período:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="437" y="13" width="135" height="16" forecolor="#000000" uuid="f6027e03-19c3-46c1-9084-c6d2a012bbfe"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date_generation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="47" y="54" width="161" height="16" forecolor="#000000" uuid="f8215f37-170f-4e03-ae75-ca946e4f3469"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{period}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="228" y="0" width="154" height="16" forecolor="#000000" uuid="3979547c-c2aa-48e2-8427-0fdf469a78f1"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Fortaleza, CE - Brasil]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="93" y="0" width="150" height="16" forecolor="#000000" uuid="bf61fd6f-b5ce-4b00-8783-79d610c2754e"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Festival de Esperança 2015 - ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="93" y="15" width="248" height="16" uuid="3c82bead-a895-486b-a060-07655ecfabfa"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RELATÓRIO DE FREQUENCIA POR DATA"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="551" y="27" width="21" height="16" uuid="e3b2ea84-9c46-4761-8e2f-4e96fcfea304"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="509" y="27" width="46" height="16" uuid="72dc1d54-6cd2-4909-a200-dde92d452fb5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="0" width="135" height="16" forecolor="#000000" uuid="50f776f5-d261-4b8f-8e10-1678960d5bf5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{hour_generation}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="50" width="572" height="1" uuid="299043fa-fa33-4fce-bedb-fbc47274e6fa"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="62" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="41" width="30" height="20" uuid="5d8be766-fefa-4782-bfab-da7f1022805a"/>
-				<text><![CDATA[id]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="30" y="42" width="100" height="20" uuid="524aa43a-6e23-4886-b5b0-65d865a5f6f0"/>
-				<text><![CDATA[name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="130" y="42" width="100" height="20" uuid="ac0f7e15-9140-4c5e-92db-191dc63249c6"/>
-				<text><![CDATA[email]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="230" y="42" width="100" height="20" uuid="5b9c1d43-d8ed-47bf-b48a-97641cd1fa48"/>
-				<text><![CDATA[phone]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="330" y="41" width="100" height="20" uuid="4629750a-2956-4da1-8806-9ebf3b2f4a94"/>
-				<text><![CDATA[state]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="430" y="41" width="100" height="20" uuid="dde78792-5496-47d1-8cb4-18b3f12bc4ea"/>
-				<text><![CDATA[city]]></text>
-			</staticText>
+		<band height="32">
+			<textField>
+				<reportElement mode="Transparent" x="0" y="0" width="54" height="20" backcolor="#CCCCCC" uuid="380eec45-07c1-4345-ac41-bbebb0c276a9"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Código"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="257" y="1" width="211" height="20" backcolor="#CCCCCC" uuid="ae441d3e-4a5f-47e3-ba07-544f78a775e2"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Igreja"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="20" width="571" height="1" uuid="8c300ce8-19e2-4aa6-9248-e1751790977b"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement mode="Transparent" x="54" y="1" width="205" height="20" backcolor="#CCCCCC" uuid="ae441d3e-4a5f-47e3-ba07-544f78a775e2"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Conselheiro"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="468" y="0" width="104" height="20" backcolor="#CCCCCC" uuid="6196d31a-bed3-4269-bb5c-d60b79d175d0"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data"]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="21">
 			<textField>
-				<reportElement x="0" y="0" width="30" height="20" uuid="8f263268-d864-4a81-995c-ea59650c970d"/>
+				<reportElement x="1" y="-1" width="53" height="17" uuid="6a380da1-8305-46ee-a75f-c2b9e480281e"/>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="30" y="0" width="100" height="20" uuid="79ba12d5-19f0-440a-8fa4-501431883bcb"/>
+				<reportElement x="54" y="0" width="203" height="16" uuid="bc738325-0279-481d-85bd-1e79b0c131d0"/>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="130" y="0" width="100" height="20" uuid="f190512b-d6f6-4193-8d17-8c22a4842582"/>
-				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				<reportElement x="257" y="0" width="211" height="16" uuid="89bd202f-9fd3-45ad-b895-e5c7a3bb5de4"/>
+				<textFieldExpression><![CDATA[$F{church}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="230" y="0" width="100" height="20" uuid="322215d5-0636-4c11-993a-62fa53c1c0c0"/>
-				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="330" y="0" width="100" height="20" uuid="cf7cdb90-608d-4b81-95d9-72941b3ca214"/>
-				<textFieldExpression><![CDATA[$F{state}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="430" y="0" width="100" height="20" uuid="0df10a59-e3c3-47e7-9dca-3e06179b1b2e"/>
-				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
+				<reportElement x="468" y="-1" width="104" height="17" uuid="8d15a9b5-58a4-444e-9f80-9379698a783d"/>
+				<textFieldExpression><![CDATA[$F{day_event}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch"/>
-	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="91">
+			<textField pattern="">
+				<reportElement x="467" y="7" width="105" height="16" uuid="1c7195bd-85a6-43f5-9d6d-151ced78767f"/>
+				<box>
+					<pen lineWidth="0.0" lineColor="#999999"/>
+					<topPen lineWidth="0.0" lineColor="#999999"/>
+					<leftPen lineWidth="0.0" lineColor="#999999"/>
+					<bottomPen lineWidth="0.0" lineColor="#999999"/>
+					<rightPen lineWidth="0.0" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="159" y="7" width="308" height="16" uuid="3d29ce7a-0eb2-481d-bb64-002a34dc27dd"/>
+				<box>
+					<pen lineWidth="0.0" lineColor="#999999"/>
+					<topPen lineWidth="0.0" lineColor="#999999"/>
+					<leftPen lineWidth="0.0" lineColor="#999999"/>
+					<bottomPen lineWidth="0.0" lineColor="#999999"/>
+					<rightPen lineWidth="0.0" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TOTAL:  "]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="0" width="571" height="3" uuid="2155b5fb-63cc-4055-829f-36d2cb86d9de"/>
+			</line>
+		</band>
 	</summary>
 </jasperReport>

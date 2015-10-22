@@ -25,7 +25,6 @@
   <form method="post" action="">
     <div id="report" class="btn-group pull-right">
       <input class="btn btn-default" type="submit" name="relTipo_PDF" style="float: right;" value="PDF"></input>
-      <input type="submit" value="Submit" name="submit"/>
     </div>
   </form>
 </div>
@@ -66,13 +65,28 @@ if (isset($_POST['relTipo_PDF']))
   include_once("/var/www/html/hopeFestival/resources/reports/phpJasperXml/class/PHPJasperXML.inc.php");
   include_once('/var/www/html/hopeFestival/resources/reports/phpJasperXml/setting.php');
 
-  $PHPJasperXML = new PHPJasperXML(); 
-  $PHPJasperXML->debugsql=true;
-  $PHPJasperXML->arrayParameter=array();
-  $PHPJasperXML->load_xml_file("/var/www/html/hopeFestival/resources/reports/counselors/counselors.jrxml");
+  $begindb = $begindb." 00:00:00";
+  $enddb = $end_date. "23:59:59";
 
+  print_r($begindb); exit();
+
+  $PHPJasperXML = new PHPJasperXML();
+  $PHPJasperXML->debugsql=false;
+  $PHPJasperXML->arrayParameter=array(
+    "begin"     =>"'".$begindb."'",
+    "end"       =>"'".$enddb."'",
+    "total"     => $total,
+    "date_generation" => date("d/m/Y"),
+    "hour_generation" => date("H:i:s"),
+    "period" => $start_date." - ".$end_date
+ );
+
+  $PHPJasperXML = new PHPJasperXML(); 
+  $PHPJasperXML->debugsql=false;
+  $PHPJasperXML->arrayParameter=array();
+  $PHPJasperXML->load_xml_file("/var/www/html/hopeFestival/resources/reports/counselors/report1.jrxml");
   $PHPJasperXML->transferDBtoArray($server,$user,$pass,$db);
-  $PHPJasperXML->outpage("D", "AVANT_relatorio-atendimentos_".date("d/m/Y H:i").".pdf");    //page output method I:standard output  D:Download file
+  $PHPJasperXML->outpage("D", "FE2015_relatorio-conselheiros_".date("d/m/Y H:i").".pdf");    //page output method I:standard output  D:Download file
   exit;
 }
 

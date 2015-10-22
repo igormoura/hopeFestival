@@ -58,7 +58,8 @@ class CounselorController extends Controller
       ]); 
     if ($validator->fails())
     {
-      return redirect()->back()->withErrors($validator->errors());
+      Session::flash('error', 'Campo obrigatório.');
+      return redirect()->back();
     }
     else 
     {
@@ -84,14 +85,15 @@ class CounselorController extends Controller
             'created_at' =>  new \DateTime('NOW'),
             'updated_at' =>  new \DateTime('NOW')]
             );
+          Session::flash('success', 'Credencialmente realizado com sucesso.');
           return redirect('counselors');
         }else{
-          return redirect()->back()->withErrors("Codigo de barra já registrado.");
+          Session::flash('error', 'Codigo de barra já credenciado.');
+          return redirect()->back();
         }
-        
       }
-
-      return redirect()->back()->withErrors("Code Bar not found.");
+      Session::flash('error', 'Codigo de barra inválido.');
+      return redirect()->back();
     }
   }
 
@@ -107,7 +109,8 @@ class CounselorController extends Controller
         $checking_db = DB::table('checking')->whereAccreditationIdAndDayEvent($accreditation->id, \Date('Y-m-d'))->get();
         if(!empty($checking_db))
         {
-          return redirect()->back()->withErrors("Checking já realizado");
+          Session::flash('error', 'Checking já realizado.');
+          return redirect()->back();
         }
         elseif(empty($checking_db))
         {
@@ -118,65 +121,44 @@ class CounselorController extends Controller
             'created_at' =>  new \DateTime('NOW'),
             'updated_at' =>  new \DateTime('NOW')]
             );
+          Session::flash('success', 'Checking realizado com successo.');
           return redirect('counselors');
         }
       }
-      return redirect()->back()->withErrors("Codigo de barra não credenciado a um conselheiro.");      
+      Session::flash('error', 'Codigo de barra não credenciado a um conselheiro.');
+      return redirect()->back();     
     }
-    Session::flash('message1', 'My message');
+    Session::flash('error', 'Codigo de barra inválido.');
     return redirect()->back();
   }
 
   public function checking(Request $request)
   {
-    /*$validator = Validator::make(Request::all(), [
-      'date_event' => 'required'
-    ]); 
-    if ($validator->fails())
+    $checking=Request::all();
+    $accreditation = DB::table('accreditation')->where('counselor_id', $checking['counselor'])->first();
+    $counselor = Counselor::find($checking['counselor']);
+    $checking_db = DB::table('checking')->whereAccreditationIdAndDayEvent($accreditation->id, $checking['day_event'])->get();
+
+    if(!empty($checking_db))
     {
-      return redirect()->back()->withErrors($validator->errors());
+      Session::flash('error', $counselor->name." Já realizou o checking no dia ".date("d/m/Y", strtotime($checking['day_event'])));
+      return redirect()->back();
     }
-    else 
-    {*/
-      //$codeBar = DB::table('code_bars')->where('serial', Input::get('code_bar'))->first();
-      //if(isset($codeBar))
-      //{
-      //  if($codeBar->active==0)
-      //  {
-          //$codeBar = CodeBar::find($codeBar->id);
-          //$codeBar->active = 1;
-          //$codeBar->save();
-
-          //$codeBarCounselor=Request::all();
-
-      $checking=Request::all();
-      $accreditation = DB::table('accreditation')->where('counselor_id', $checking['counselor'])->first();
-      $counselor = Counselor::find($checking['counselor']);
-      $checking_db = DB::table('checking')->whereAccreditationIdAndDayEvent($accreditation->id, $checking['day_event'])->get();
-
-      if(!empty($checking_db))
-      {
-        return redirect()->back()->withErrors($counselor->name." Já realizou o checking no dia ".date("d/m/Y", strtotime($checking['day_event'])));
-      }
-      elseif(empty($checking_db))
-      {
-        DB::table('checking')->insert(
-          ['accreditation_id' => $accreditation->id, 
-          'confirmed'=> 1,
-          'day_event'=> $checking['day_event'],
-          'created_at' =>  new \DateTime('NOW'),
-          'updated_at' =>  new \DateTime('NOW')]
-          );
-        return redirect('counselors');
-      }
-        //}else{
-        //  return redirect()->back()->withErrors("Codigo de barra já registrado.");
-        //}
-
-      //}
-
-      return redirect()->back()->withErrors("Code Bar not found.");
+    elseif(empty($checking_db))
+    {
+      DB::table('checking')->insert(
+        ['accreditation_id' => $accreditation->id, 
+        'confirmed'=> 1,
+        'day_event'=> $checking['day_event'],
+        'created_at' =>  new \DateTime('NOW'),
+        'updated_at' =>  new \DateTime('NOW')]
+        );
+      Session::flash('success', 'Checking realizado com sucesso.');
+      return redirect('counselors');
     }
+    Session::flash('error', 'Codigo de barra inválido.');
+    return redirect()->back();
+  }
 
   /**
    * Show the form for creating a new resource.

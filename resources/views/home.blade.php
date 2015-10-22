@@ -7,7 +7,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">Home</div>
 				<div class="panel-body">
-					Welcome to VMS - version management system. You are logged in.
+					Welcome to Festival of Hope 2015. You are logged in.
 				</div>
 			</div>
 		</div>
